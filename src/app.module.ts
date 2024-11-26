@@ -3,8 +3,7 @@ import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { GraphQLModule } from '@nestjs/graphql'
 import path from 'node:path'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
+import { AppResolver } from './app.resolver'
 import { DatabaseModule } from './database/database.module'
 
 @Module({
@@ -16,7 +15,6 @@ import { DatabaseModule } from './database/database.module'
       autoSchemaFile: path.resolve(process.cwd(), 'src/schema.gql'),
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [AppResolver],
 })
 export class AppModule {}
