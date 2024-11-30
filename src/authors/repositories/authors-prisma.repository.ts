@@ -1,4 +1,5 @@
 import { PrismaService } from '@/database/prisma/prisma.service'
+import { NotFoundError } from '@/shared/errors/not-found-error'
 import { Author } from '../graphql/models/author'
 import {
   IAuthorsRepository,
@@ -24,8 +25,8 @@ export class AuthorsPrismaRepository implements IAuthorsRepository {
     throw new Error('Method not implemented.')
   }
 
-  findById(id: string): Promise<Author> {
-    throw new Error('Method not implemented.')
+  async findById(id: string): Promise<Author> {
+    return this.get(id)
   }
 
   findByEmail(email: string): Promise<Author> {
@@ -36,7 +37,15 @@ export class AuthorsPrismaRepository implements IAuthorsRepository {
     throw new Error('Method not implemented.')
   }
 
-  get(id: string): Promise<Author> {
-    throw new Error('Method not implemented.')
+  async get(id: string): Promise<Author> {
+    const author = await this.prisma.author.findUnique({
+      where: { id },
+    })
+
+    if (!author) {
+      throw new NotFoundError(`Author not found using ID ${id}`)
+    }
+
+    return author
   }
 }
