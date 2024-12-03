@@ -14,7 +14,7 @@ describe('AuthorsPrismaRepository Integration Tests', () => {
     await prisma.$connect()
     module = await Test.createTestingModule({}).compile()
     repository = new AuthorsPrismaRepository(prisma as any)
-  }, 30000) // Timeout de 30 segundos
+  })
 
   beforeEach(async () => {
     await prisma.author.deleteMany()
@@ -30,5 +30,19 @@ describe('AuthorsPrismaRepository Integration Tests', () => {
     await expect(repository.findById(uuid)).rejects.toThrow(
       new NotFoundError(`Author not found using ID ${uuid}`),
     )
-  }, 10000) // Timeout de 10 segundos
+  })
+
+  test('should find an author by id', async () => {
+    const data = {
+      name: 'John Doe',
+      email: 'a@a.com',
+    }
+
+    const author = await prisma.author.create({
+      data,
+    })
+
+    const result = await repository.findById(author.id)
+    expect(result).toStrictEqual(author)
+  })
 })
