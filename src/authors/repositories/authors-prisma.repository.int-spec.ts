@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { PrismaClient } from '@prisma/client'
 import { execSync } from 'node:child_process'
 import { AuthorsPrismaRepository } from './authors-prisma.repository'
+import { AuthorDataBuilder } from '../helpers/author-data-builder'
 
 describe('AuthorsPrismaRepository Integration Tests', () => {
   let module: TestingModule
@@ -33,10 +34,7 @@ describe('AuthorsPrismaRepository Integration Tests', () => {
   })
 
   test('should find an author by id', async () => {
-    const data = {
-      name: 'John Doe',
-      email: 'a@a.com',
-    }
+    const data = AuthorDataBuilder({})
 
     const author = await prisma.author.create({
       data,
