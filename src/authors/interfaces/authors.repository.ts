@@ -13,7 +13,7 @@ export type SearchResult = {
   items: Author[]
   currentPage: number
   perPage: number
-  lastPage: string
+  lastPage: number
   total: number
 }
 
