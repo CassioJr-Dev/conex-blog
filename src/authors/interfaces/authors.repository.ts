@@ -22,7 +22,7 @@ export interface IAuthorsRepository {
 
   create(data: ICreateAuthor): Promise<Author>
   update(author: Author): Promise<Author>
-  delete(id: string): Promise<Author>
+  delete(id: string): Promise<void>
   findById(id: string): Promise<Author>
   findByEmail(email: string): Promise<Author>
   search(params: SearchParams): Promise<SearchResult>

@@ -33,8 +33,13 @@ export class AuthorsPrismaRepository implements IAuthorsRepository {
     return authorUpdated
   }
 
-  delete(id: string): Promise<Author> {
-    throw new Error('Method not implemented.')
+  async delete(id: string): Promise<void> {
+    await this.get(id)
+    await this.prisma.author.delete({
+      where: {
+        id,
+      },
+    })
   }
 
   async findById(id: string): Promise<Author> {

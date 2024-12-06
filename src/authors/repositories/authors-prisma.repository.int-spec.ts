@@ -77,6 +77,22 @@ describe('AuthorsPrismaRepository Integration Tests', () => {
     expect(result.name).toBe('new name')
   })
 
+  test('should throw an error when deleting a author not found', async () => {
+    const uuid = 'd628e44c-1ba2-4a39-b52d-2406d1602485'
+    await expect(repository.delete(uuid)).rejects.toThrow(
+      new NotFoundError(`Author not found using ID ${uuid}`),
+    )
+  })
+
+  test('should delete a author', async () => {
+    const data = AuthorDataBuilder({})
+
+    const author = await prisma.author.create({ data })
+
+    const result = await repository.delete(author.id)
+    expect(result).toBeUndefined()
+  })
+
   describe('search method', () => {
     test('should only apply pagination when the parameters are null', async () => {
       const createdAt = new Date()
