@@ -86,11 +86,21 @@ describe('AuthorsPrismaRepository Integration Tests', () => {
 
   test('should delete a author', async () => {
     const data = AuthorDataBuilder({})
-
     const author = await prisma.author.create({ data })
-
     const result = await repository.delete(author.id)
     expect(result).toBeUndefined()
+  })
+
+  test('should return null when it does not find an author with the email provided', async () => {
+    const result = await repository.findByEmail('a@a.com')
+    expect(result).toBeNull()
+  })
+
+  test('should return a author in email search', async () => {
+    const data = AuthorDataBuilder({ email: 'a@a.com' })
+    const author = await prisma.author.create({ data })
+    const result = await repository.findByEmail('a@a.com')
+    expect(result).toMatchObject(author)
   })
 
   describe('search method', () => {
