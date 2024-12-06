@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { AuthorsPrismaRepository } from '../repositories/authors-prisma.repository'
+import { AuthorsPrismaRepository } from '../../repositories/authors-prisma.repository'
 import { PrismaClient } from '@prisma/client'
 import { CreateAuthor } from './create.author.usecase'
 import { execSync } from 'node:child_process'
-import { AuthorDataBuilder } from '../helpers/author-data-builder'
+import { AuthorDataBuilder } from '../../helpers/author-data-builder'
 import { ConflictError } from '@/shared/errors/conflict-error'
 import { BadRequestError } from '@/shared/errors/bad-request-error'
 
