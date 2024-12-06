@@ -2,7 +2,7 @@ import { BadRequestError } from '@/shared/errors/bad-request-error'
 import { AuthorsPrismaRepository } from '../repositories/authors-prisma.repository'
 import { ConflictError } from '@/shared/errors/conflict-error'
 
-export namespace CreateAuthorUseCase {
+export namespace CreateAuthor {
   export type Input = {
     name: string
     email: string
