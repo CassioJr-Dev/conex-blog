@@ -1,15 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { AuthorsPrismaRepository } from '../../repositories/authors-prisma.repository'
 import { PrismaClient } from '@prisma/client'
-import { GetAuthor } from './get-author.usecase'
+import { UpdateAuthor } from './update-author.usecase'
 import { execSync } from 'node:child_process'
-import { NotFoundError } from '@/shared/errors/not-found-error'
 import { AuthorDataBuilder } from '@/authors/helpers/author-data-builder'
+import { BadRequestError } from '@/shared/errors/bad-request-error'
+import { ConflictError } from '@/shared/errors/conflict-error'
 
-describe('GetAuthor UseCase Integration Tests', () => {
+describe('UpdateAuthor UseCase Integration Tests', () => {
   let module: TestingModule
   let repository: AuthorsPrismaRepository
-  let usecase: GetAuthor.UseCase
+  let usecase: UpdateAuthor.UseCase
   const prisma = new PrismaClient()
 
   beforeAll(async () => {
@@ -17,7 +18,7 @@ describe('GetAuthor UseCase Integration Tests', () => {
     await prisma.$connect()
     module = await Test.createTestingModule({}).compile()
     repository = new AuthorsPrismaRepository(prisma as any)
-    usecase = new GetAuthor.UseCase(repository)
+    usecase = new UpdateAuthor.UseCase(repository)
   })
 
   beforeEach(async () => {
@@ -29,17 +30,38 @@ describe('GetAuthor UseCase Integration Tests', () => {
     await prisma.$disconnect()
   })
 
-  test('should throws an error when the id is not found', async () => {
+  test('should throws an error when the id is not provided', async () => {
+    const input = {
+      id: null,
+    }
     await expect(() =>
-      usecase.execute({ id: 'd628e44c-1ba2-4a39-b52d-2406d1602485' }),
-    ).rejects.toBeInstanceOf(NotFoundError)
+      usecase.execute({ id: input.id }),
+    ).rejects.toBeInstanceOf(BadRequestError)
   })
 
-  test('should be able to get author by id', async () => {
+  test('should throws an error when provided email is duplicated', async () => {
+    const data = AuthorDataBuilder({ email: 'a@a.com' })
+    const firstAuthor = await prisma.author.create({ data })
+    const secondAuthor = await prisma.author.create({
+      data: AuthorDataBuilder({}),
+    })
+
+    secondAuthor.email = 'a@a.com'
+    await expect(() => usecase.execute(secondAuthor)).rejects.toBeInstanceOf(
+      ConflictError,
+    )
+  })
+
+  test('should be able to update author', async () => {
     const data = AuthorDataBuilder({})
     const author = await prisma.author.create({ data })
 
-    const result = await usecase.execute({ id: author.id })
-    expect(result).toStrictEqual(author)
+    const result = await usecase.execute({
+      ...author,
+      name: 'Name Updated',
+      email: 'a@a.com',
+    })
+    expect(result.name).toEqual('Name Updated')
+    expect(result.email).toEqual('a@a.com')
   })
 })
