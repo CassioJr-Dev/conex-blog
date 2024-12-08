@@ -1,4 +1,3 @@
-import { AuthorOutput } from '@/authors/dto/author-output'
 import { AuthorsPrismaRepository } from '../../repositories/authors-prisma.repository'
 
 export namespace DeleteAuthor {

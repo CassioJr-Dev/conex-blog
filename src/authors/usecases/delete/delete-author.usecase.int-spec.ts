@@ -35,11 +35,14 @@ describe('DeleteAuthor UseCase Integration Tests', () => {
     ).rejects.toBeInstanceOf(NotFoundError)
   })
 
-  test('should be able to get author by id', async () => {
+  test('should delete a author', async () => {
     const data = AuthorDataBuilder({})
     const author = await prisma.author.create({ data })
 
     const result = await usecase.execute({ id: author.id })
-    expect(result).toStrictEqual(author)
+    expect(result).toBeUndefined()
+
+    const authors = await prisma.author.findMany()
+    expect(authors).toHaveLength(0)
   })
 })
