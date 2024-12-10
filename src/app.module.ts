@@ -6,6 +6,7 @@ import path from 'node:path'
 import { AppResolver } from './app.resolver'
 import { AuthorsModule } from './authors/authors.module'
 import { DatabaseModule } from './database/database.module'
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { DatabaseModule } from './database/database.module'
       autoSchemaFile: path.resolve(process.cwd(), 'src/schema.gql'),
     }),
     AuthorsModule,
+    PostsModule,
   ],
   providers: [AppResolver],
 })
