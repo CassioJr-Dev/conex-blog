@@ -53,12 +53,47 @@ describe('PostsPrismaRepository Integration Tests', () => {
     expect(result).toStrictEqual(post)
   })
 
-  test('should find a post by id', async () => {
+  test('should create a post', async () => {
     const postData = PostsDataBuilder({})
     const authorData = AuthorDataBuilder({})
     const author = await prisma.author.create({ data: authorData })
 
     const result = await repository.create({ ...postData, authorId: author.id })
     expect(result).toMatchObject(postData)
+  })
+
+  test('should throw an error when updating a post not found', async () => {
+    const data = PostsDataBuilder({})
+    const post = {
+      ...data,
+      id: 'd628e44c-1ba2-4a39-b52d-2406d1602485',
+      authorId: '900cc177-03ed-4ac0-94de-cd58eadbe738',
+    }
+
+    await expect(repository.update(post)).rejects.toThrow(
+      new NotFoundError(`Post not found using ID ${post.id}`),
+    )
+  })
+
+  test('should update a post', async () => {
+    const postData = PostsDataBuilder({})
+    const authorData = AuthorDataBuilder({})
+    const author = await prisma.author.create({ data: authorData })
+    const post = await prisma.post.create({
+      data: {
+        ...postData,
+        author: {
+          connect: { id: author.id },
+        },
+      },
+    })
+
+    const result = await repository.update({
+      ...post,
+      published: true,
+      title: 'title-updated',
+    })
+    expect(result.published).toEqual(true)
+    expect(result.title).toEqual('title-updated')
   })
 })
