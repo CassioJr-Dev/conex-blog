@@ -96,4 +96,27 @@ describe('PostsPrismaRepository Integration Tests', () => {
     expect(result.published).toEqual(true)
     expect(result.title).toEqual('title-updated')
   })
+
+  test('should return null when it does not find an post with the slug provided', async () => {
+    const result = await repository.findBySlug('fake-slug-data')
+    expect(result).toBeNull()
+  })
+
+  test('should find a post by id', async () => {
+    const postData = PostsDataBuilder({})
+    const authorData = AuthorDataBuilder({})
+    const author = await prisma.author.create({ data: authorData })
+
+    const post = await prisma.post.create({
+      data: {
+        ...postData,
+        author: {
+          connect: { id: author.id },
+        },
+      },
+    })
+
+    const result = await repository.findBySlug(post.slug)
+    expect(result).toStrictEqual(post)
+  })
 })
