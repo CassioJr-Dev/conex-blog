@@ -1,7 +1,7 @@
 import { PostOutput } from '@/posts/dto/post-output'
 import { PostsPrismaRepository } from '@/posts/repositories/posts-prisma.repository'
 
-export namespace PublishPost {
+export namespace UnpublishPost {
   export type Input = {
     id: string
   }
@@ -14,7 +14,7 @@ export namespace PublishPost {
     async execute(input: Input): Promise<Output> {
       const post = await this.postsRepository.findById(input.id)
 
-      post.published = true
+      post.published = false
       const postUpdated = await this.postsRepository.update(post)
 
       return postUpdated as PostOutput
