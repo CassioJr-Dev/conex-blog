@@ -7,10 +7,13 @@ import { AuthorsPrismaRepository } from '@/authors/repositories/authors-prisma.r
 import { GetPost } from './usecases/get/get-post.usecase'
 import { PublishPost } from './usecases/publish/publish-post.usecase'
 import { UnpublishPost } from './usecases/unpublish/unpublish-post.usecase'
+import { PostsResolver } from './graphql/resolvers/posts.resolver'
+import { GetAuthor } from '@/authors/usecases/get/get-author.usecase'
 
 @Module({
   imports: [DatabaseModule],
   providers: [
+    PostsResolver,
     {
       provide: 'PrismaService',
       useClass: PrismaService,
@@ -59,6 +62,13 @@ import { UnpublishPost } from './usecases/unpublish/unpublish-post.usecase'
         return new UnpublishPost.UseCase(postsRepository)
       },
       inject: ['PostsRepository'],
+    },
+    {
+      provide: GetAuthor.UseCase,
+      useFactory: (authorRepository: AuthorsPrismaRepository) => {
+        return new GetAuthor.UseCase(authorRepository)
+      },
+      inject: ['AuthorsRepository'],
     },
   ],
 })
