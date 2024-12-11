@@ -1,9 +1,18 @@
-import { Args, Mutation, Parent, ResolveField, Resolver } from '@nestjs/graphql'
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql'
 import { Post } from '../models/post'
 import { Inject } from '@nestjs/common'
 import { CreatePost } from '@/posts/usecases/create/create-post.usecase'
 import { CreatePostInput } from '../inputs/create-post.input'
 import { GetAuthor } from '@/authors/usecases/get/get-author.usecase'
+import { GetPost } from '@/posts/usecases/get/get-post.usecase'
+import { PostIdArgs } from '../args/post-id.args'
 
 @Resolver(() => Post)
 export class PostsResolver {
@@ -12,6 +21,14 @@ export class PostsResolver {
 
   @Inject(GetAuthor.UseCase)
   private getAuthorUseCase: GetAuthor.UseCase
+
+  @Inject(GetPost.UseCase)
+  private getPostUseCase: GetPost.UseCase
+
+  @Query(() => Post)
+  async getPostById(@Args() { id }: PostIdArgs) {
+    return this.getPostUseCase.execute({ id })
+  }
 
   @Mutation(() => Post)
   async createPost(@Args('data') data: CreatePostInput) {
