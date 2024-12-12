@@ -1,11 +1,10 @@
 import { Field, InputType } from '@nestjs/graphql'
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator'
+import { IsNotEmpty, IsString } from 'class-validator'
 
 @InputType()
 export class CreatePostInput {
   @IsString()
   @IsNotEmpty()
-  @MaxLength(5)
   @Field()
   title: string
 
