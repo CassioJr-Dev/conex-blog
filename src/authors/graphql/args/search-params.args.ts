@@ -1,15 +1,15 @@
 import { ArgsType, Field, Int } from '@nestjs/graphql'
-import { IsNumber, IsOptional, IsString, Min } from 'class-validator'
+import { IsNumber, IsOptional, IsString, MinLength } from 'class-validator'
 
 @ArgsType()
 export class SearchParamsArgs {
-  @Min(1)
+  @MinLength(1)
   @IsNumber()
   @IsOptional()
   @Field(() => Int, { nullable: true })
   page?: number
 
-  @Min(1)
+  @MinLength(1)
   @IsNumber()
   @IsOptional()
   @Field(() => Int, { nullable: true })
