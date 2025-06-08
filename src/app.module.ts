@@ -15,6 +15,7 @@ import path from 'node:path'
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: path.resolve(process.cwd(), 'src/schema.gql'),
+      playground: true,
       formatError: error => {
         const originalError = error?.extensions?.originalError
         return {
