@@ -8,11 +8,11 @@ Projeto de blog desenvolvido com [NestJS](https://nestjs.com/), [Prisma ORM](htt
 
 - **Node.js**
 - **NestJS** (framework principal)
-- **GraphQL** (API principal)
+- **GraphQL** (API)
 - **Prisma ORM** (acesso a banco de dados PostgreSQL)
 - **TypeScript**
 - **Jest** (testes)
-- **Docker** (opcional)
+- **Docker** (subir container do servidor do banco de dados)
 
 ## Estrutura do Projeto
 
