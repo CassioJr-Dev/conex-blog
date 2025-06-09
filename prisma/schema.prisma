@@ -27,7 +27,7 @@ model Post {
   slug      String   @unique
   content   String
   published Boolean  @default(false)
-  author    Author   @relation(fields: [authorId], references: [id])
+  author    Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
   createdAt DateTime @default(now())
 }

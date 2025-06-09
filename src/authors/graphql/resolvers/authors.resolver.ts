@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { Author } from '../models/author'
-import { Inject } from '@nestjs/common'
+import { Inject, UnprocessableEntityException } from '@nestjs/common'
 import { ListAuthor } from '@/authors/usecases/list/list-authors.usecase'
 import { SearchParamsArgs } from '../args/search-params.args'
 import { SearchAuthorsResult } from '../models/search-authors-result'
@@ -11,6 +11,8 @@ import { AuthorIdArgs } from '../args/author-id.args'
 import { UpdateAuthor } from '@/authors/usecases/update/update-author.usecase'
 import { UpdateAuthorInput } from '../inputs/update-author.input'
 import { DeleteAuthor } from '@/authors/usecases/delete/delete-author.usecase'
+import { plainToInstance } from 'class-transformer'
+import { validateSync } from 'class-validator'
 
 @Resolver(() => Author)
 export class AuthorsResolver {
@@ -56,7 +58,7 @@ export class AuthorsResolver {
 
   @Mutation(() => Author)
   async updateAuthor(
-    @Args() { id }: AuthorIdArgs,
+    @Args('id') id: string,
     @Args('data') data: UpdateAuthorInput,
   ) {
     return this.updateAuthorUseCase.execute({ id, ...data })
