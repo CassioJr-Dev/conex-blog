@@ -6,6 +6,7 @@ import { AppResolver } from './app.resolver'
 import { AuthorsModule } from './authors/authors.module'
 import { DatabaseModule } from './database/database.module'
 import { PostsModule } from './posts/posts.module'
+import { HelloWordController } from './hello-word.controller'
 import path from 'node:path'
 
 @Module({
@@ -32,5 +33,6 @@ import path from 'node:path'
     PostsModule,
   ],
   providers: [AppResolver],
+  controllers: [HelloWordController],
 })
 export class AppModule {}
